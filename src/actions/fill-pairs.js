@@ -2,7 +2,7 @@ import store from '../store.js'
 import chance from '../chance.js'
 import * as c from '../constants.js'
 
-var count = 60
+var count = 180
 
 function createPairs () {
   var pairs = []

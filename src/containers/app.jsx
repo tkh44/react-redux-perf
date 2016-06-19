@@ -21,7 +21,7 @@ class App extends React.Component {
               <ul className='list-group'>
                 {group.map((pair) => {
                   return (
-                    <Pair key={pair.id} name={pair.name} value={pair.value} />
+                    <Pair key={pair.id} id={pair.id} />
                   )
                 })}
               </ul>

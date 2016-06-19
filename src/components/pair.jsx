@@ -1,4 +1,5 @@
 import React from 'react'
+import { connect } from 'react-redux'
 
 class Pair extends React.Component {
   constructor () {
@@ -31,4 +32,9 @@ class Pair extends React.Component {
   }
 }
 
-export default Pair
+export default connect(
+  (state, props) => state.filter(pair => pair.id === props.id)[0],
+  null,
+  null,
+  { recomputationsProp: '__recomputations' }
+)(Pair)

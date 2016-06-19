@@ -8,12 +8,11 @@ function pairs (state = initialState, action) {
       return action.pairs.concat()
     }
     case c.UPDATE_PAIR: {
-      for (var i = 0; i < state.length; i++) {
-        if (state[i].id === action.id) {
-          state[i].value = action.value
-        }
-      }
-      return state.concat()
+      return state.map(pair => {
+        return pair.id === action.id
+          ? Object.assign({}, pair, { value: action.value })
+          : pair
+      })
     }
     default: {
       return state
