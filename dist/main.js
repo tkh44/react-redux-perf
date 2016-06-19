@@ -26789,9 +26789,7 @@ var Pair = function (_React$Component) {
 }(_react2.default.Component);
 
 exports.default = (0, _reactRedux.connect)(function (state, props) {
-  return state.filter(function (pair) {
-    return pair.id === props.id;
-  })[0];
+  return state[props.id];
 }, null, null, { recomputationsProp: '__recomputations' })(Pair);
 
 },{"react":185,"react-redux":43}],200:[function(require,module,exports){

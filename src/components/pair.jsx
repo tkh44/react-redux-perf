@@ -33,7 +33,7 @@ class Pair extends React.Component {
 }
 
 export default connect(
-  (state, props) => state.filter(pair => pair.id === props.id)[0],
+  (state, props) => state[props.id],
   null,
   null,
   { recomputationsProp: '__recomputations' }
