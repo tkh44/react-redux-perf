@@ -35203,7 +35203,6 @@ var App = function (_React$Component) {
 
 exports.default = (0, _reactSmitty.track)('fill-pairs', 'groups', function (state, props) {
   var partition = Math.floor(state.length / 3);
-
   return [state.slice(0, partition), state.slice(partition, partition * 2), state.slice(partition * 2)];
 })(App);
 
@@ -35262,16 +35261,6 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-function shallowDiffers(a, b) {
-  for (var i in a) {
-    if (!(i in b)) return true;
-  }
-  for (var _i in b) {
-    if (a[_i] !== b[_i]) return true;
-  }
-  return false;
-}
 
 var tree = (0, _smitty.createStore)({
   connections: [],
@@ -35340,11 +35329,11 @@ tree.handleActions((_tree$handleActions = {}, _defineProperty(_tree$handleAction
     }
   };
 
-  // payload.instance.componentWillReceiveProps = function (nextProps) {
-  //   if (this.props !== nextProps) {
-  //     cb()
-  //   }
-  // }
+  payload.instance.componentWillReceiveProps = function (nextProps) {
+    if (this.props !== nextProps) {
+      cb();
+    }
+  };
 
   state.userStore.on(payload.type, cb);
   state.trackers.push({
@@ -35511,7 +35500,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 var initialState = [];
-var count = 330;
+var count = 1000;
 var store = (0, _smitty.createStore)(initialState);
 var FILL_PAIRS = 'fill-pairs';
 var UPDATE_PAIR = 'update-pair';

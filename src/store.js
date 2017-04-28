@@ -2,7 +2,7 @@ import {createStore} from 'smitty'
 import chance from './chance.js'
 
 var initialState = []
-var count = 330
+var count = 1000
 var store = createStore(initialState)
 const FILL_PAIRS = 'fill-pairs'
 const UPDATE_PAIR = 'update-pair'

@@ -1,16 +1,6 @@
 import {Component, createElement} from 'react'
 import {createStore} from 'smitty'
 
-function shallowDiffers (a, b) {
-  for (let i in a) {
-    if (!(i in b)) return true
-  }
-  for (let i in b) {
-    if (a[i] !== b[i]) return true
-  }
-  return false
-}
-
 const tree = createStore({
   connections: [],
   trackers: []
@@ -90,11 +80,11 @@ tree.handleActions({
       }
     }
 
-    // payload.instance.componentWillReceiveProps = function (nextProps) {
-    //   if (this.props !== nextProps) {
-    //     cb()
-    //   }
-    // }
+    payload.instance.componentWillReceiveProps = function (nextProps) {
+      if (this.props !== nextProps) {
+        cb()
+      }
+    }
 
     state.userStore.on(payload.type, cb)
     state.trackers.push({
