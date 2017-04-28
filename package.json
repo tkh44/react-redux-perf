@@ -59,6 +59,6 @@
   },
   "scripts": {
     "check": "snazzy",
-    "build": "browserify src/main.jsx > dist/main.js"
+    "build": "browserify src/main.jsx -t [ envify --NODE_ENV production  ] > dist/main.js"
   }
 }
