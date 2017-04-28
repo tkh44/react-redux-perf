@@ -1,5 +1,5 @@
 import React from 'react'
-import {connect} from '../react-smitty'
+import {connect, track} from '../react-smitty'
 import selector from '../selectors/pair-selector.js'
 import Pair from '../components/pair.jsx'
 
@@ -28,4 +28,16 @@ class App extends React.Component {
   }
 }
 
-export default connect(selector)(App)
+export default track(
+  'fill-pairs',
+  'groups',
+  (state, props) => {
+    var partition = Math.floor(state.length / 3)
+
+    return [
+      state.slice(0, partition),
+      state.slice(partition, partition * 2),
+      state.slice(partition * 2)
+    ]
+  }
+)(App)

@@ -35087,13 +35087,13 @@ var Pair = function (_React$Component) {
     key: 'componentWillReceiveProps',
     value: function componentWillReceiveProps(nextProps) {
       this.setState({
-        direction: nextProps.value > this.props.value ? 'up' : 'down'
+        direction: nextProps.pair.value > this.props.pair.value ? 'up' : 'down'
       });
     }
   }, {
     key: 'shouldComponentUpdate',
     value: function shouldComponentUpdate(nextProps) {
-      return this.props.value !== nextProps.value;
+      return this.props.pair.value !== nextProps.pair.value;
     }
   }, {
     key: 'render',
@@ -35104,7 +35104,7 @@ var Pair = function (_React$Component) {
         _react2.default.createElement(
           'span',
           null,
-          this.props.name
+          this.props.pair.name
         ),
         _react2.default.createElement(
           'span',
@@ -35113,7 +35113,7 @@ var Pair = function (_React$Component) {
           _react2.default.createElement(
             'span',
             null,
-            this.props.value
+            this.props.pair.value
           )
         )
       );
@@ -35123,8 +35123,10 @@ var Pair = function (_React$Component) {
   return Pair;
 }(_react2.default.Component);
 
-exports.default = (0, _reactSmitty.connect)(function (state, props) {
+exports.default = (0, _reactSmitty.track)('update-pair', 'pair', function (state, props) {
   return state[props.id];
+}, function (state, props, type, data) {
+  return !data || props.id === data.id;
 })(Pair);
 
 },{"../react-smitty":488,"react":481}],486:[function(require,module,exports){
@@ -35199,7 +35201,11 @@ var App = function (_React$Component) {
   return App;
 }(_react2.default.Component);
 
-exports.default = (0, _reactSmitty.connect)(_pairSelector2.default)(App);
+exports.default = (0, _reactSmitty.track)('fill-pairs', 'groups', function (state, props) {
+  var partition = Math.floor(state.length / 3);
+
+  return [state.slice(0, partition), state.slice(partition, partition * 2), state.slice(partition * 2)];
+})(App);
 
 },{"../components/pair.jsx":485,"../react-smitty":488,"../selectors/pair-selector.js":489,"react":481}],487:[function(require,module,exports){
 'use strict';
@@ -35256,6 +35262,16 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function shallowDiffers(a, b) {
+  for (var i in a) {
+    if (!(i in b)) return true;
+  }
+  for (var _i in b) {
+    if (a[_i] !== b[_i]) return true;
+  }
+  return false;
+}
 
 var tree = (0, _smitty.createStore)({
   connections: [],
@@ -35317,16 +35333,18 @@ tree.handleActions((_tree$handleActions = {}, _defineProperty(_tree$handleAction
 
   var cb = function cb(data) {
     var props = payload.getProps();
-    payload.instance.setState(function () {
-      return _defineProperty({}, payload.key, payload.tracker(state.userStore.state, data, props, payload.type));
-    });
-  };
-
-  payload.instance.componentWillReceiveProps = function (nextProps) {
-    if (this.props !== nextProps) {
-      cb();
+    if (payload.shouldTrackerUpdate(state.userStore.state, props, payload.type, data)) {
+      payload.instance.setState(function () {
+        return _defineProperty({}, payload.key, payload.tracker(state.userStore.state, props, payload.type, data));
+      });
     }
   };
+
+  // payload.instance.componentWillReceiveProps = function (nextProps) {
+  //   if (this.props !== nextProps) {
+  //     cb()
+  //   }
+  // }
 
   state.userStore.on(payload.type, cb);
   state.trackers.push({
@@ -35334,6 +35352,10 @@ tree.handleActions((_tree$handleActions = {}, _defineProperty(_tree$handleAction
     type: payload.type,
     cb: cb
   });
+
+  if (payload.shouldTrackerUpdate(state.userStore.state, payload.getProps(), payload.type, undefined)) {
+    payload.instance.state = _defineProperty({}, payload.key, payload.tracker(state.userStore.state, payload.getProps(), payload.type, undefined));
+  }
 }), _defineProperty(_tree$handleActions, tree.actions.releaseAction, function (state, payload) {
   var index = state.connections.findIndex(function (inst) {
     return inst === payload;
@@ -35410,6 +35432,10 @@ function connect(mapStateToProps) {
 }
 
 function track(type, statePropertyKey, tracker) {
+  var shouldTrackerUpdate = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : function () {
+    return true;
+  };
+
   return function wrapComponent(WrappedComponent) {
     return function (_Component3) {
       _inherits(Connect, _Component3);
@@ -35423,6 +35449,7 @@ function track(type, statePropertyKey, tracker) {
           instance: _this3,
           type: type.toString(),
           key: statePropertyKey,
+          shouldTrackerUpdate: shouldTrackerUpdate,
           tracker: tracker,
           getProps: function getProps() {
             return _this3.props;

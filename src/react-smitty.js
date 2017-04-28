@@ -1,5 +1,15 @@
-import { Component, createElement } from 'react'
-import { createStore } from 'smitty'
+import {Component, createElement} from 'react'
+import {createStore} from 'smitty'
+
+function shallowDiffers (a, b) {
+  for (let i in a) {
+    if (!(i in b)) return true
+  }
+  for (let i in b) {
+    if (a[i] !== b[i]) return true
+  }
+  return false
+}
 
 const tree = createStore({
   connections: [],
@@ -61,21 +71,30 @@ tree.handleActions({
 
     let cb = data => {
       let props = payload.getProps()
-      payload.instance.setState(() => ({
-        [payload.key]: payload.tracker(
+      if (
+        payload.shouldTrackerUpdate(
           state.userStore.state,
-          data,
           props,
-          payload.type
+          payload.type,
+          data
         )
-      }))
-    }
-
-    payload.instance.componentWillReceiveProps = function (nextProps) {
-      if (this.props !== nextProps) {
-        cb()
+      ) {
+        payload.instance.setState(() => ({
+          [payload.key]: payload.tracker(
+            state.userStore.state,
+            props,
+            payload.type,
+            data
+          )
+        }))
       }
     }
+
+    // payload.instance.componentWillReceiveProps = function (nextProps) {
+    //   if (this.props !== nextProps) {
+    //     cb()
+    //   }
+    // }
 
     state.userStore.on(payload.type, cb)
     state.trackers.push({
@@ -83,6 +102,24 @@ tree.handleActions({
       type: payload.type,
       cb
     })
+
+    if (
+      payload.shouldTrackerUpdate(
+        state.userStore.state,
+        payload.getProps(),
+        payload.type,
+        undefined
+      )
+    ) {
+      payload.instance.state = {
+        [payload.key]: payload.tracker(
+          state.userStore.state,
+          payload.getProps(),
+          payload.type,
+          undefined
+        )
+      }
+    }
   },
   [tree.actions.releaseAction]: (state, payload) => {
     const index = state.connections.findIndex(inst => inst === payload)
@@ -137,7 +174,7 @@ export function connect (mapStateToProps) {
   }
 }
 
-export function track (type, statePropertyKey, tracker) {
+export function track (type, statePropertyKey, tracker, shouldTrackerUpdate = () => true) {
   return function wrapComponent (WrappedComponent) {
     return class Connect extends Component {
       constructor (props) {
@@ -147,6 +184,7 @@ export function track (type, statePropertyKey, tracker) {
           instance: this,
           type: type.toString(),
           key: statePropertyKey,
+          shouldTrackerUpdate,
           tracker,
           getProps: () => this.props
         })
