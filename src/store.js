@@ -1,21 +1,62 @@
-import { createStore } from 'redux'
-import { batchedSubscribe } from 'redux-batched-subscribe'
+import {createStore} from 'smitty'
+import chance from './chance.js'
 
-import pairs from './reducers/pairs.js'
+var initialState = []
+var count = 330
+var store = createStore(initialState)
+const FILL_PAIRS = 'fill-pairs'
+const UPDATE_PAIR = 'update-pair'
 
-var requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame
-
-var lazyNotify = function () {}
-var noop = function () {}
-
-function digest () {
-  lazyNotify()
-  lazyNotify = noop
-  requestAnimationFrame(digest)
+function getRandIndex () {
+  return Math.floor(Math.random() * (store.state.length - 1))
 }
 
-digest()
+store.createActions({
+  fillPairs: () => {
+    let pairs = []
+    for (let i = 0; i < count; i++) {
+      var pair = chance.currency_pair()
+      pairs.push({
+        id: i,
+        value: Math.random(),
+        name: pair[0].code + pair[1].code
+      })
+    }
+    return store => {
+      store.emit(FILL_PAIRS, pairs)
+    }
+  },
+  updatePair: () => {
+    return store => {
+      store.emit(UPDATE_PAIR, {
+        id: getRandIndex(),
+        value: Math.random()
+      })
+    }
+  },
+  simulate: () => {
+    return store => {
+      let update = () => store.emit(store.actions.updatePair)
+      setInterval(update, 13)
 
-var store = createStore(pairs, [], batchedSubscribe((nofity) => { lazyNotify = nofity }))
+      setInterval(update, 21)
+
+      setInterval(update, 34)
+
+      setInterval(update, 55)
+    }
+  }
+})
+
+store.handleActions({
+  [FILL_PAIRS]: (state, pairs) => {
+    return pairs.concat()
+  },
+  [UPDATE_PAIR]: (state, {id, value}) => {
+    return state.map(pair => {
+      return pair.id === id ? Object.assign({}, pair, {value}) : pair
+    })
+  }
+})
 
 export default store

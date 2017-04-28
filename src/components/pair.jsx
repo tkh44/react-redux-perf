@@ -1,5 +1,5 @@
 import React from 'react'
-import { connect } from 'react-redux'
+import { connect } from '../react-smitty'
 
 class Pair extends React.Component {
   constructor () {
@@ -33,8 +33,5 @@ class Pair extends React.Component {
 }
 
 export default connect(
-  (state, props) => state[props.id],
-  null,
-  null,
-  { recomputationsProp: '__recomputations' }
+  (state, props) => state[props.id]
 )(Pair)
