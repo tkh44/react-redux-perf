@@ -11,10 +11,10 @@ class App extends React.Component {
   render () {
     return (
       <div className="row">
+        <h1>1k tracked components</h1>
         {this.props.groups.map((group, idx) => {
           return (
             <div className="col-lg-4" key={idx}>
-              <h1>1k tracked components</h1>
               <ul className="list-group">
                 {group.map(pair => {
                   return <Pair key={pair.id} id={pair.id} />
