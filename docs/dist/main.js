@@ -35144,10 +35144,6 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactSmitty = require('../react-smitty');
 
-var _pairSelector = require('../selectors/pair-selector.js');
-
-var _pairSelector2 = _interopRequireDefault(_pairSelector);
-
 var _pair = require('../components/pair.jsx');
 
 var _pair2 = _interopRequireDefault(_pair);
@@ -35186,6 +35182,11 @@ var App = function (_React$Component) {
             'div',
             { className: 'col-lg-4', key: idx },
             _react2.default.createElement(
+              'h1',
+              null,
+              '1k tracked components'
+            ),
+            _react2.default.createElement(
               'ul',
               { className: 'list-group' },
               group.map(function (pair) {
@@ -35206,7 +35207,7 @@ exports.default = (0, _reactSmitty.track)('fill-pairs', 'groups', function (stat
   return [state.slice(0, partition), state.slice(partition, partition * 2), state.slice(partition * 2)];
 })(App);
 
-},{"../components/pair.jsx":485,"../react-smitty":488,"../selectors/pair-selector.js":489,"react":481}],487:[function(require,module,exports){
+},{"../components/pair.jsx":485,"../react-smitty":488,"react":481}],487:[function(require,module,exports){
 'use strict';
 
 require('babel-polyfill');
@@ -35235,7 +35236,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
   _react2.default.createElement(_app2.default, null)
 ), document.getElementById('root'));
 
-},{"./containers/app.jsx":486,"./react-smitty":488,"./store.js":490,"babel-polyfill":1,"react":481,"react-dom":330}],488:[function(require,module,exports){
+},{"./containers/app.jsx":486,"./react-smitty":488,"./store.js":489,"babel-polyfill":1,"react":481,"react-dom":330}],488:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -35465,22 +35466,6 @@ function track(type, statePropertyKey, tracker) {
 }
 
 },{"react":481,"smitty":483}],489:[function(require,module,exports){
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-function pairSelector(state) {
-  var partition = Math.floor(state.length / 3);
-
-  return {
-    groups: [state.slice(0, partition), state.slice(partition, partition * 2), state.slice(partition * 2)]
-  };
-}
-
-exports.default = pairSelector;
-
-},{}],490:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
