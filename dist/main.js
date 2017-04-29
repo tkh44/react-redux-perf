@@ -35177,15 +35177,15 @@ var App = function (_React$Component) {
       return _react2.default.createElement(
         'div',
         { className: 'row' },
+        _react2.default.createElement(
+          'h1',
+          null,
+          '1k tracked components'
+        ),
         this.props.groups.map(function (group, idx) {
           return _react2.default.createElement(
             'div',
             { className: 'col-lg-4', key: idx },
-            _react2.default.createElement(
-              'h1',
-              null,
-              '1k tracked components'
-            ),
             _react2.default.createElement(
               'ul',
               { className: 'list-group' },
@@ -35428,12 +35428,12 @@ function track(type, statePropertyKey, tracker) {
 
   return function wrapComponent(WrappedComponent) {
     return function (_Component3) {
-      _inherits(Connect, _Component3);
+      _inherits(Track, _Component3);
 
-      function Connect(props) {
-        _classCallCheck(this, Connect);
+      function Track(props) {
+        _classCallCheck(this, Track);
 
-        var _this3 = _possibleConstructorReturn(this, (Connect.__proto__ || Object.getPrototypeOf(Connect)).call(this, props));
+        var _this3 = _possibleConstructorReturn(this, (Track.__proto__ || Object.getPrototypeOf(Track)).call(this, props));
 
         tree.actions.trackAction({
           instance: _this3,
@@ -35448,7 +35448,7 @@ function track(type, statePropertyKey, tracker) {
         return _this3;
       }
 
-      _createClass(Connect, [{
+      _createClass(Track, [{
         key: 'componentWillUnmount',
         value: function componentWillUnmount() {
           tree.actions.releaseAction(this);
@@ -35460,7 +35460,7 @@ function track(type, statePropertyKey, tracker) {
         }
       }]);
 
-      return Connect;
+      return Track;
     }(_react.Component);
   };
 }
