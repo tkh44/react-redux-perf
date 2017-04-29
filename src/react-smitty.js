@@ -166,7 +166,7 @@ export function connect (mapStateToProps) {
 
 export function track (type, statePropertyKey, tracker, shouldTrackerUpdate = () => true) {
   return function wrapComponent (WrappedComponent) {
-    return class Connect extends Component {
+    return class Track extends Component {
       constructor (props) {
         super(props)
 
